@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Detail</title>
+</head>
+<body>
+  <h1>{{ user.name }}</h1>
+
+  <p>Weight (kg): {{ user.weight_kg }}</p>
+  <p>Height (cm): {{ user.height_cm }}</p>
+  <p>Sex: {{ user.sex }}</p>
+  <p>Date of Birth: {{ user.date_of_birth }}</p>
+
+  <p><a href="{% url 'user_list' %}">Back to list</a></p>
+</body>
+</html>

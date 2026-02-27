@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User List</title>
+</head>
+
+<body>
+    <h1>Users</h1>
+
+    <p><a href="{% url 'user_create' %}">Create New User</a></p>
+
+    {% if users %}
+    <ul>
+        {% for u in users %}
+        <li>
+            {{ u.name }} ({{ u.sex }})
+            - <a href="{% url 'user_detail' u.id %}">View Details</a>
+            - <a href="{% url 'user_delete' u.id %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No users yet.</p>
+    {% endif %}
+</body>
+
+</html>
