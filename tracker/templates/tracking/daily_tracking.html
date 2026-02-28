@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Daily Tracking</title>
+</head>
+
+<body>
+    <h1>Daily Tracking</h1>
+
+    <h2>User: {{ user.name }}</h2>
+
+    <form method="get">
+        <label>Date:</label>
+        <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+        <button type="submit">Load</button>
+    </form>
+
+    <p>
+        <a href="{% url 'user_detail' user.id %}">Back to user</a> |
+        <a href="{% url 'user_list' %}">Switch user</a>
+    </p>
+
+    <hr>
+
+    <h3>Calories In (Food)</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="food">
+        {{ food_form.as_p }}
+        <button type="submit">Add Food</button>
+    </form>
+
+    <h4>Food entries</h4>
+    <ul>
+        {% for e in food_entries %}
+        <li>{{ e.meal_time }}: {{ e.food.name }} x {{ e.servings }} = {{ e.calories }}</li>
+        {% empty %}
+        <li>No food entries.</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Total Food Calories:</strong> {{ total_food }}</p>
+
+    <hr>
+
+    <h3>Calories Out (Activities + BMR)</h3>
+
+    <p><strong>BMR (auto):</strong> {{ bmr }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="activity">
+        {{ activity_form.as_p }}
+        <button type="submit">Add Activity</button>
+    </form>
+
+    <h4>Activity entries</h4>
+    <ul>
+        {% for e in activity_entries %}
+        <li>{{ e.activity.name }} ({{ e.duration_minutes }} min) = {{ e.calories }}</li>
+        {% empty %}
+        <li>No activity entries.</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Total Activity Calories:</strong> {{ total_activity }}</p>
+
+    <hr>
+
+    <h3>Net Calories</h3>
+    <p>
+        {{ total_food }} - {{ bmr }} - {{ total_activity }} = <strong>{{ net }}</strong>
+    </p>
+
+</body>
+
+</html>
