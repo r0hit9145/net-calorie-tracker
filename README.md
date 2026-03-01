@@ -30,8 +30,8 @@ A Django MVT web app to track daily net calories per user:
 
 ## Project setup (Linux)
 ```bash
-git clone <YOUR_REPO_URL>
-cd <YOUR_PROJECT_FOLDER>
+git clone <https://github.com/r0hit9145/net-calorie-tracker.git>
+cd <net-calorie-tracker>
 
 python3 -m venv env
 source env/bin/activate
