@@ -1,76 +1,143 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+<!doctype html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daily Tracking</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Daily Tracking</h1>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'user_list' %}">
+                        <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        </header>
 
-    <h2>User: {{ user.name }}</h2>
+        <div class="mid-container">
+            <div class="container">
+                {% if messages %}
+                <div style="margin: 15px 0;">
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="title-row">
+                    <h1 class="title">Daily Tracking</h1>
+                </div>
 
-    <form method="get">
-        <label>Date:</label>
-        <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}">
-        <button type="submit">Load</button>
-    </form>
+                <p><strong>User:</strong> {{ user.name }}</p>
 
-    <p>
-        <a href="{% url 'user_detail' user.id %}">Back to user</a> |
-        <a href="{% url 'user_list' %}">Switch user</a>
-    </p>
+                <!-- Date controls -->
+                <form method="get" style="margin-bottom: 12px;">
+                    <label>Date:</label>
+                    <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}"
+                        min="{{ min_date|date:'Y-m-d' }}" max="{{ max_date|date:'Y-m-d' }}">
+                    <button class="btn-primary" type="submit">Load</button>
+                </form>
 
-    <hr>
+                <p style="margin-bottom: 16px;">
+                    {% if prev_date %}
+                    <a href="?date={{ prev_date|date:'Y-m-d' }}">← Previous Day</a>
+                    {% else %}
+                    ← Previous Day
+                    {% endif %}
+                    |
+                    {% if next_date %}
+                    <a href="?date={{ next_date|date:'Y-m-d' }}">Next Day →</a>
+                    {% else %}
+                    Next Day →
+                    {% endif %}
+                </p>
 
-    <h3>Calories In (Food)</h3>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="food">
-        {{ food_form.as_p }}
-        <button type="submit">Add Food</button>
-    </form>
+                <p style="margin-bottom: 20px;">
+                    <a href="{% url 'user_detail' user.id %}">Back to user</a> |
+                    <a href="{% url 'user_list' %}">Switch user</a>
+                </p>
 
-    <h4>Food entries</h4>
-    <ul>
-        {% for e in food_entries %}
-        <li>{{ e.meal_time }}: {{ e.food.name }} x {{ e.servings }} = {{ e.calories }}</li>
-        {% empty %}
-        <li>No food entries.</li>
-        {% endfor %}
-    </ul>
-    <p><strong>Total Food Calories:</strong> {{ total_food }}</p>
+                <hr>
 
-    <hr>
+                <h3>Calories In (Food)</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="food">
+                    {{ food_form.as_p }}
+                    <button class="btn-primary" type="submit">Add Food</button>
+                </form>
 
-    <h3>Calories Out (Activities + BMR)</h3>
+                <h4>Food entries</h4>
+                <ul>
+                    {% for e in food_entries %}
+                    <li>
+                        {{ e.meal_time }}: {{ e.food.name }} x {{ e.servings }} = {{ e.calories|floatformat:2 }}
+                    </li>
+                    {% empty %}
+                    <li>No food entries.</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Total Food Calories:</strong> {{ total_food|floatformat:2 }}</p>
 
-    <p><strong>BMR (auto):</strong> {{ bmr }}</p>
+                <hr>
 
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="activity">
-        {{ activity_form.as_p }}
-        <button type="submit">Add Activity</button>
-    </form>
+                <h3>Calories Out (Activities + BMR)</h3>
+                <p><strong>BMR (auto):</strong> {{ bmr|floatformat:2 }}</p>
 
-    <h4>Activity entries</h4>
-    <ul>
-        {% for e in activity_entries %}
-        <li>{{ e.activity.name }} ({{ e.duration_minutes }} min) = {{ e.calories }}</li>
-        {% empty %}
-        <li>No activity entries.</li>
-        {% endfor %}
-    </ul>
-    <p><strong>Total Activity Calories:</strong> {{ total_activity }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="activity">
+                    {{ activity_form.as_p }}
+                    <button class="btn-primary" type="submit">Add Activity</button>
+                </form>
 
-    <hr>
+                <h4>Activity entries</h4>
+                <ul>
+                    {% for e in activity_entries %}
+                    <li>
+                        {{ e.activity.name }} ({{ e.duration_minutes }} min) = {{ e.calories|floatformat:2 }}
+                    </li>
+                    {% empty %}
+                    <li>No activity entries.</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Total Activity Calories:</strong> {{ total_activity|floatformat:2 }}</p>
 
-    <h3>Net Calories</h3>
-    <p>
-        {{ total_food }} - {{ bmr }} - {{ total_activity }} = <strong>{{ net }}</strong>
-    </p>
+                <hr>
 
+                <h3>Net Calories</h3>
+                <p>
+                    {{ total_food|floatformat:2 }} - {{ bmr|floatformat:2 }} - {{ total_activity|floatformat:2 }}
+                    = <strong>{{ net|floatformat:2 }}</strong>
+                </p>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>2026 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{% static 'assets/js/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 </body>
 
 </html>

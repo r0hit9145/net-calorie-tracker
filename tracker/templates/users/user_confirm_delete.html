@@ -1,17 +1,65 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+<!doctype html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="{% static 'assets/img/favicon.ico' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Delete User</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Delete {{ user.name }}?</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Yes, delete</button>
-        <a href="{% url 'user_list' %}">Cancel</a>
-    </form>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'user_list' %}">
+                        <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="mid-container">
+            <div class="container">
+                <div class="title-row">
+                    <h1 class="title">Delete User</h1>
+                </div>
+
+                <div style="max-width: 680px;">
+                    <p>Are you sure you want to delete <strong>{{ user.name }}</strong>?</p>
+
+                    <form action="{% url 'user_delete' user.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="btn-set" style="margin-top: 16px;">
+                            <button type="submit" class="btn-primary">Yes, delete</button>
+                            <a class="btn-secondary" href="{% url 'user_list' %}">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>2022 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{% static 'assets/js/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 </body>
 
 </html>

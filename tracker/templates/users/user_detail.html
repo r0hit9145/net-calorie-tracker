@@ -1,16 +1,80 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+<!doctype html>
+<html lang="en">
+
 <head>
-  <title>User Detail</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Detail</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
 </head>
+
 <body>
-  <h1>{{ user.name }}</h1>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'user_list' %}">
+                        <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        </header>
 
-  <p>Weight (kg): {{ user.weight_kg }}</p>
-  <p>Height (cm): {{ user.height_cm }}</p>
-  <p>Sex: {{ user.sex }}</p>
-  <p>Date of Birth: {{ user.date_of_birth }}</p>
+        <div class="mid-container">
+            <div class="container">
+                <div class="title-row">
+                    <h1 class="title">{{ user.name }}</h1>
+                </div>
 
-  <p><a href="{% url 'user_list' %}">Back to list</a></p>
+                <div style="max-width: 680px;">
+                    <div class="input-field">
+                        <label>Weight (kg)</label>
+                        <div>{{ user.weight_kg|floatformat:1 }}</div>
+                    </div>
+
+                    <div class="input-field">
+                        <label>Height (cm)</label>
+                        <div>{{ user.height_cm|floatformat:0 }}</div>
+                    </div>
+
+                    <div class="input-field">
+                        <label>Sex</label>
+                        <div>{% if user.sex == 'M' %}Male{% else %}Female{% endif %}</div>
+                    </div>
+
+                    <div class="input-field">
+                        <label>Date of Birth</label>
+                        <div>{{ user.date_of_birth }}</div>
+                    </div>
+
+                    <div class="btn-set" style="margin-top: 16px;">
+                        <a class="btn-primary" href="{% url 'daily_tracking' user.id %}">Open Daily Tracking</a>
+                        <a class="btn-secondary" href="{% url 'user_list' %}">Back to list</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>2026 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{% static 'assets/js/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 </body>
+
 </html>

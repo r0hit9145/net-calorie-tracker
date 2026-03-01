@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import UserProfile, DailyLog, FoodEntry, ActivityEntry
 from .forms import UserProfileForm, FoodEntryForm, ActivityEntryForm
 from datetime import date, datetime, timedelta
-# from django.contrib import messages
+from django.contrib import messages
 # from django.db.models import Sum
 from .utils import calculate_activity_calories, calculate_bmr
 
@@ -30,7 +30,8 @@ def user_detail(request, user_id):
 
 def user_delete(request, user_id):
     user = get_object_or_404(UserProfile, id=user_id)
-
+    #debugging it.............
+    print("Mein yaha")
     if request.method == "POST":
         user.delete()
         return redirect("user_list")
@@ -52,6 +53,15 @@ def daily_tracking(request, user_id):
     if selected_date > date.today() or selected_date < (date.today() - timedelta(days=30)):
         selected_date = date.today()
 
+    min_date = date.today() - timedelta(days=30)
+    max_date = date.today()
+
+    prev_date = selected_date - timedelta(days=1)
+    next_date = selected_date + timedelta(days=1)
+
+    prev_date = prev_date if prev_date >= min_date else None
+    next_date = next_date if next_date <= max_date else None
+
     # 3) Get or create DailyLog
     daily_log, _ = DailyLog.objects.get_or_create(user=user, date=selected_date)
 
@@ -70,6 +80,7 @@ def daily_tracking(request, user_id):
                 entry.daily_log = daily_log
                 entry.calories = float(entry.servings) * float(entry.food.calories_per_serving)
                 entry.save()
+                messages.success(request, "Food entry added.")
                 return redirect(f"{request.path}?date={selected_date.isoformat()}")
 
         elif form_type == "activity":
@@ -83,6 +94,7 @@ def daily_tracking(request, user_id):
                     duration_minutes=entry.duration_minutes,
                 )
                 entry.save()
+                messages.success(request, "Activity entry added.")
                 return redirect(f"{request.path}?date={selected_date.isoformat()}")
 
     # 6) Load existing entries
@@ -113,5 +125,9 @@ def daily_tracking(request, user_id):
         "total_activity": total_activity,
         "bmr": bmr,
         "net": net,
+        "min_date": min_date,
+        "max_date": max_date,
+        "prev_date": prev_date,
+        "next_date": next_date,
     }
     return render(request, "tracking/daily_tracking.html", context)

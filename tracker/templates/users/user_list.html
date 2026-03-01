@@ -1,28 +1,115 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+<!doctype html>
+<html lang="en">
 
 <head>
-    <title>User List</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calorie Tracker Coding Assignment - User List</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Users</h1>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'user_list' %}">
+                        <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        </header>
 
-    <p><a href="{% url 'user_create' %}">Create New User</a></p>
+        <div class="mid-container">
+            <div class="container">
+                <div class="title-row">
+                    <h1 class="title">User List</h1>
+                </div>
 
-    {% if users %}
-    <ul>
-        {% for u in users %}
-        <li>
-            {{ u.name }} ({{ u.sex }})
-            - <a href="{% url 'user_detail' u.id %}">View Details</a>
-            - <a href="{% url 'user_delete' u.id %}">Delete</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No users yet.</p>
-    {% endif %}
+                <div style="margin: 12px 0;">
+                    <a class="btn-primary" href="{% url 'user_create' %}">Create New User</a>
+                </div>
+
+                <div class="user-list">
+                    <table class="dcf-table dcf-table-responsive dcf-table-bordered dcf-table-striped dcf-w-100%">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="name">Name</th>
+                                <th scope="col" class="weight">Weight</th>
+                                <th scope="col" class="height">Height</th>
+                                <th scope="col" class="gender">Gender</th>
+                                <th scope="col" class="action">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for u in users %}
+                            <tr>
+                                <th scope="row">{{ u.name }}</th>
+
+                                <td data-label="Weight">{{ u.weight_kg|floatformat:1 }}</td>
+                                <td data-label="Height">{{ u.height_cm|floatformat:0 }}</td>
+
+                                <td data-label="Gender">
+                                    {% if u.sex == 'M' %}male{% else %}female{% endif %}
+                                </td>
+
+                                <!-- Optional columns (not required for user list by PDF).
+                                         Keep '-' for now to avoid extra logic here. -->
+                                <!-- <td data-label="Age">-</td> -->
+                                <!-- <th scope="col">-</th> -->
+
+                                <td data-label="Action">
+                                    <div class="btn-set"
+                                        style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                                        <a class="btn-secondary" href="{% url 'user_detail' u.id %}">View</a>
+
+                                        <a class="btn-primary add-data-btn" href="{% url 'daily_tracking' u.id %}">
+                                            Add Data
+                                        </a>
+
+                                        <!-- <form action="{% url 'user_delete' u.id %}" method="post"
+                                            style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-secondary">Delete</button>
+                                        </form> -->
+                                        <!-- for get-> show confirm page -->
+                                        <a class="btn-secondary" href="{% url 'user_delete' u.id %}">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">No users yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>2026 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
 </body>
+
+<script src="{% static 'assets/js/jquery.slim.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/custom.js' %}"></script>
 
 </html>

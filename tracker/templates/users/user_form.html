@@ -1,17 +1,96 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+<!doctype html>
+<html lang="en">
+
 <head>
-  <title>Create User</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="{% static 'assets/img/favicon.ico' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create User</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
 </head>
+
 <body>
-  <h1>Create User</h1>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'user_list' %}">
+                        <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        </header>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+        <div class="mid-container">
+            <div class="container">
+                <div class="title-row">
+                    <h1 class="title">Create User</h1>
+                </div>
 
-  <p><a href="{% url 'user_list' %}">Back to list</a></p>
+                <div style="max-width: 680px;">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {{ form.non_field_errors }}
+
+                        <div class="input-field">
+                            <label>Name</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Weight (kg)</label>
+                            {{ form.weight_kg }}
+                            {{ form.weight_kg.errors }}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Height (cm)</label>
+                            {{ form.height_cm }}
+                            {{ form.height_cm.errors }}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Sex</label>
+                            {{ form.sex }}
+                            {{ form.sex.errors }}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Date of birth</label>
+                            {{ form.date_of_birth }}
+                            {{ form.date_of_birth.errors }}
+                        </div>
+                        <br>
+                        <div class="btn-set">
+                            <button class="btn-primary" type="submit">Save</button>
+                            <a class="btn-secondary" href="{% url 'user_list' %}">Back to list</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>2026 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- <script src="{% static 'assets/js/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script> -->
 </body>
+
 </html>
