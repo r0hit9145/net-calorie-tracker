@@ -15,8 +15,16 @@ class FoodEntryForm(forms.ModelForm):
         model = FoodEntry
         fields = ["food", "servings", "meal_time"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["food"].queryset = self.fields["food"].queryset.order_by("name")
+
 
 class ActivityEntryForm(forms.ModelForm):
     class Meta:
         model = ActivityEntry
         fields = ["activity", "duration_minutes"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["activity"].queryset = self.fields["activity"].queryset.order_by("name", "specific_motion")
